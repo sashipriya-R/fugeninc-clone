@@ -1,74 +1,126 @@
-import React from 'react';
+import React, { useState } from "react";
 
 const ContactFormSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Message sent successfully!");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong.");
+    }
+  };
+
   return (
-    <div className="bg-white py-12 px-4 sm:px-6 lg:px-20">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <section className="bg-white py-12">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
         
-        <div className="flex flex-col justify-center text-gray-800 space-y-6 pl-10 sm:pl-16">
+        {/* Left Column - Contact Info (moved more to the right) */}
+        <div className="md:w-1/2 space-y-6 md:pl-16">
           <div>
-            <h3 className="text-xl font-semibold">Our Address</h3>
-            <p className="mt-2">
-              5 Independence Way, Suite 300 Princeton, NJ 08540
+            <h2 className="text-lg font-semibold text-gray-800">Our Address</h2>
+            <p className="text-gray-600 mt-2 leading-relaxed">
+              5 Independence Way, Suite 300 Princeton, NJ<br />08540
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold">Send your message</h3>
-            <p className="mt-2 text-blue-900">hr@fugeninc.com</p>
+            <h2 className="text-lg font-semibold text-gray-800">Send your message</h2>
+            <p className="text-gray-600 mt-2">hr@fugeninc.com</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold">Call us on</h3>
-            <p className="mt-2">+1 (732)-762-3756</p>
+            <h2 className="text-lg font-semibold text-gray-800">Call us on</h2>
+            <p className="text-gray-600 mt-2">+1 (732)-762-3756</p>
           </div>
         </div>
-        <div className="bg-gray-100 p-6 sm:p-6 md:p-8 lg:p-6 w-full max-w-[500px] mx-auto ml-[-20px]">
-          <form className="space-y-5">
+
+        {/* Right Column - Form */}
+        <div className="md:w-1/2 bg-gray-50 p-8 shadow-md border border-gray-200 max-w-md w-full">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Your Name</label>
+              <label className="block text-xs font-medium text-gray-700">Your name</label>
               <input
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 bg-white focus:outline-none"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 p-2 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Your Email</label>
+              <label className="block text-xs font-medium text-gray-700">Your email</label>
               <input
                 type="email"
-                className="w-full px-4 py-2 border border-gray-300 bg-white focus:outline-none"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 p-2 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Subject</label>
+              <label className="block text-xs font-medium text-gray-700">Subject</label>
               <input
                 type="text"
-                className="w-full px-4 py-2 border border-gray-300 bg-white focus:outline-none"
+                name="subject"
+                required
+                value={formData.subject}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 p-2 text-sm"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Your Message (optional)</label>
+              <label className="block text-xs font-medium text-gray-700">Your message (optional)</label>
               <textarea
-                rows={4}
-                className="w-full px-4 py-2 border border-gray-300 bg-white focus:outline-none resize-none"
-              ></textarea>
+                name="message"
+                rows="4"
+                value={formData.message}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 p-2 text-sm"
+              />
             </div>
 
-            <div>
-              <button
-                type="submit"
-                className="bg-[#f24c1a] hover:bg-orange-600 text-white font-semibold py-2 px-5"
-              >
-                SUBMIT
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="bg-orange-600 text-white px-5 py-2 text-sm font-semibold hover:bg-orange-700 transition"
+            >
+              SUBMIT
+            </button>
           </form>
         </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 

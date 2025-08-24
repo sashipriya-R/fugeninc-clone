@@ -5,7 +5,6 @@ import missionImage from "../assets/images/mission.jpg";
 const MissionSection = () => {
   return (
     <section className="bg-white py-6">
-      
       {/* Heading & Intro Text with Zoom-in Animation */}
       <motion.div
         initial={{ scale: 0.85, opacity: 0 }}
@@ -25,7 +24,6 @@ const MissionSection = () => {
 
       {/* Two-Column Layout (Image Left / Content Right) */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-
         {/* Left Column - Mission Image */}
         <div className="flex justify-center">
           <motion.img
@@ -39,30 +37,25 @@ const MissionSection = () => {
           />
         </div>
 
-        {/* Right Column - Mission Details */}
-        <div className="flex flex-col">
-          <motion.p
+        {/* Right Column - Mission Details (shifted right with padding) */}
+        <div className="flex flex-col md:pl-8">
+          {/* Slide-in from right for headings */}
+          <motion.div
             initial={{ x: 80, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-orange-500 font-semibold uppercase tracking-widest text-base mb-2"
           >
-            Who We Serve
-          </motion.p>
+            <p className="text-orange-500 font-semibold uppercase tracking-widest text-base mb-2">
+              Who We Serve
+            </p>
+            <h3 className="text-3xl font-bold text-gray-900 mb-3">
+              Matching your Timeline
+            </h3>
+            <div className="w-12 h-[2px] bg-orange-500 mb-4"></div>
+          </motion.div>
 
-          <motion.h3
-            initial={{ x: 80, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-3xl font-bold text-gray-900 mb-3"
-          >
-            Matching your Timeline
-          </motion.h3>
-
-          <div className="w-12 h-[2px] bg-orange-500 mb-4"></div>
-
+          {/* Paragraph */}
           <motion.p
             initial={{ x: 80, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
@@ -75,7 +68,7 @@ const MissionSection = () => {
             perfect fit for your company.
           </motion.p>
 
-          {/* Bullet Points for Mission Values */}
+          {/* Bullet Points */}
           <motion.ul
             initial={{ x: -80, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
