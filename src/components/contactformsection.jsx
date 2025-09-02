@@ -8,15 +8,19 @@ const ContactFormSection = () => {
     message: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/send-email", {
+      // ✅ Request goes through Vite proxy → Express backend
+      const res = await fetch("/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -25,27 +29,28 @@ const ContactFormSection = () => {
       const data = await res.json();
 
       if (data.success) {
-        alert("Message sent successfully!");
+        alert("✅ Message sent successfully!");
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
-        alert("Failed to send message.");
+        alert("❌ Failed to send message: " + (data.error || ""));
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Something went wrong.");
+      alert("⚠️ Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <section className="bg-white py-12">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
-        
-        {/* Left Column - Contact Info (moved more to the right) */}
+        {/* Left Column - Contact Info */}
         <div className="md:w-1/2 space-y-6 md:pl-16">
           <div>
             <h2 className="text-lg font-semibold text-gray-800">Our Address</h2>
             <p className="text-gray-600 mt-2 leading-relaxed">
-              5 Independence Way, Suite 300 Princeton, NJ<br />08540
+              5 Independence Way, Suite 300<br />Princeton, NJ 08540
             </p>
           </div>
 
@@ -112,13 +117,17 @@ const ContactFormSection = () => {
 
             <button
               type="submit"
-              className="bg-orange-600 text-white px-5 py-2 text-sm font-semibold hover:bg-orange-700 transition"
+              disabled={loading}
+              className={`px-5 py-2 text-sm font-semibold text-white transition ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-600 hover:bg-orange-700"
+              }`}
             >
-              SUBMIT
+              {loading ? "Sending..." : "SUBMIT"}
             </button>
           </form>
         </div>
-
       </div>
     </section>
   );
